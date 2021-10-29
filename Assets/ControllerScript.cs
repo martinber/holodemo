@@ -10,19 +10,22 @@ public class ControllerScript : MonoBehaviour
 
     void Awake()
     {
-        InteractionManager.InteractionSourcePressedLegacy += GetPosition;
+        InteractionManager.InteractionSourceUpdatedLegacy += HandUpdated;
         sphere = GameObject.Find("Sphere");
         sphere.transform.position = new Vector3(0, 0, 0);
     }
 
-    private void GetPosition(UnityEngine.XR.WSA.Input.InteractionSourceState state)
+    private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
     {
-        Vector3 pos;
-        if (state.sourcePose.TryGetPosition(out pos))
+        if (state.anyPressed)
         {
-            Debug.Log(pos);
-            
-            sphere.transform.position = pos;
+            Vector3 pos;
+            if (state.sourcePose.TryGetPosition(out pos))
+            {
+                Debug.Log(pos);
+
+                sphere.transform.position = pos;
+            }
         }
     }
 
