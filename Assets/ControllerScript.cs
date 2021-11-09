@@ -6,13 +6,18 @@ using UnityEngine.XR.WSA.Input;
 
 public class ControllerScript : MonoBehaviour
 {
-    GameObject sphere;
+    GameObject clue;
+    GameObject cube;
+    Color farClueColor = Color.white;
+    Color closeClueColor = Color.red;
+    float maxClueDist = 6; // 6 meters, the distance where the clue will be of color farClueColor
 
     void Awake()
     {
         InteractionManager.InteractionSourceUpdatedLegacy += HandUpdated;
-        sphere = GameObject.Find("Sphere");
-        sphere.transform.position = new Vector3(0, 0, 0);
+        clue = GameObject.Find("Clue");
+        cube = GameObject.Find("Cube");
+        clue.transform.position = new Vector3(0, 0, 0);
     }
 
     private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
@@ -22,9 +27,10 @@ public class ControllerScript : MonoBehaviour
             Vector3 pos;
             if (state.sourcePose.TryGetPosition(out pos))
             {
-                Debug.Log(pos);
+                clue.transform.position = pos;
 
-                sphere.transform.position = pos;
+                float dist = Vector3.Distance(pos, cube.transform.position);
+                clue.GetComponent<Renderer>().material.color = Color.Lerp(farClueColor, closeClueColor, dist / maxClueDist);
             }
         }
     }
