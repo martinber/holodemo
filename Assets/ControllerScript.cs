@@ -30,7 +30,7 @@ public class ControllerScript : MonoBehaviour
                 clue.transform.position = pos;
 
                 float dist = Vector3.Distance(pos, cube.transform.position);
-                clue.GetComponent<Renderer>().material.color = Color.Lerp(farClueColor, closeClueColor, dist / maxClueDist);
+                clue.GetComponent<Renderer>().material.color = Color.Lerp(closeClueColor, farClueColor, dist / maxClueDist);
             }
         }
     }
