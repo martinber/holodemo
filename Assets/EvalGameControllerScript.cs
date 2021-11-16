@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerScript : MonoBehaviour
+public class EvalGameControllerScript : MonoBehaviour
 {
-    public GameObject huntGameController;
-    public GameObject evalGameController;
+    public GameObject targetLine;
 
     // Start is called before the first frame update
     void Start()
     {
-        huntGameController.SetActive(true);
-        // evalGameController.SetActive(true);
+        targetLine.SetActive(true);
     }
 
     // Update is called once per frame

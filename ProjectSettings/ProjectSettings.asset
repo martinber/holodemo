@@ -634,16 +634,16 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Template3D
+  metroPackageName: Holodemo
   metroPackageVersion: 1.0.0.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
   metroCertificateNotAfter: 001a8c3c2dd9d801
-  metroApplicationDescription: Template_3D
+  metroApplicationDescription: AR demos
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: holodemo
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

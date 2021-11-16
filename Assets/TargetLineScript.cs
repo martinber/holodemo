@@ -13,13 +13,10 @@ public class TargetLineScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InteractionManager.InteractionSourceUpdatedLegacy += HandUpdated;
+
         drawing = false;
         Line.positionCount = 0;
-    }
-
-    void Awake()
-    {
-        InteractionManager.InteractionSourceUpdatedLegacy += HandUpdated;
     }
 
     private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
