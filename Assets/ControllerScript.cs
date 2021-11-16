@@ -22,16 +22,13 @@ public class ControllerScript : MonoBehaviour
 
     private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
     {
-        if (state.anyPressed)
+        Vector3 pos;
+        if (state.sourcePose.TryGetPosition(out pos))
         {
-            Vector3 pos;
-            if (state.sourcePose.TryGetPosition(out pos))
-            {
-                clue.transform.position = pos;
+            clue.transform.position = pos;
 
-                float dist = Vector3.Distance(pos, cube.transform.position);
-                clue.GetComponent<Renderer>().material.color = Color.Lerp(closeClueColor, farClueColor, dist / maxClueDist);
-            }
+            float dist = Vector3.Distance(pos, cube.transform.position);
+            clue.GetComponent<Renderer>().material.color = Color.Lerp(closeClueColor, farClueColor, dist / maxClueDist);
         }
     }
 
