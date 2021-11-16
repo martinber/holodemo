@@ -1,57 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.WSA.Input;
 
 public class TargetLineScript : MonoBehaviour
 {
     public LineRenderer Line;
-    public float minimumDistance;
-
-    private bool drawing;
 
     // Start is called before the first frame update
     void Start()
     {
-        InteractionManager.InteractionSourceUpdatedLegacy += HandUpdated;
+        int nPoints = 1000;
+        float nLoops = 5f;
+        float endRadius = 0.5f;
+        float startRadius = 1f;
+        Line.positionCount = nPoints;
 
-        drawing = false;
-        Line.positionCount = 0;
-    }
-
-    private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
-    {
-        Vector3 pos;
-        if (state.anyPressed)
+        for (int index = 0; index < nPoints; index++)
         {
-            if (state.sourcePose.TryGetPosition(out pos))
-            {
-                if (!drawing)
-                {
-                    Line.positionCount = 0;
-                    Line.SetPosition(0, pos);
-                    Line.SetPosition(1, pos);
-                    Line.positionCount = 2;
-                    drawing = true;
-                }
+            float i = (float)index / (float)nPoints;
 
-                if (drawing)
-                {
-                    float distance = Vector3.Distance(pos, Line.GetPosition(Line.positionCount - 1));
-                    Line.SetPosition(Line.positionCount - 1, pos);
-                    if (distance > minimumDistance)
-                    {
-                        Line.positionCount++;
-                    }
-                }
+            float angle = 2f * Mathf.PI * i * nLoops;
+            float radius = startRadius * (1f - i) + endRadius * i;
 
-            }
+            float x = radius * Mathf.Sin(angle);
+            float y = i;
+            float z = radius * Mathf.Cos(angle);
+
+            Line.SetPosition(index, new Vector3(x, y, z));
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
