@@ -27,6 +27,7 @@ public class HuntGameControllerScript : MonoBehaviour
         if (state.sourcePose.TryGetPosition(out pos))
         {
             clue.transform.position = pos;
+            clue.transform.LookAt(cube.transform.position);
 
             float dist = Vector3.Distance(pos, cube.transform.position);
             clue.GetComponent<Renderer>().material.color = Color.Lerp(closeClueColor, farClueColor, dist / maxClueDist);
