@@ -15,11 +15,11 @@ public class PrizeScript : MonoBehaviour
     public void ActAsFound()
     {
         // Set upward velocity
-        GetComponent<Rigidbody>().velocity = new Vector3(0, 1, 0);
+        GetComponent<Rigidbody>().velocity = new Vector3(0, 0.1f, 0);
         // Destroy after some seconds
-        Destroy(gameObject, 2.0f);
+        Destroy(gameObject, 3.0f);
         // Enable gravity
-        force.enabled = true;
+        //force.enabled = true;
         // Show
         cylinder.GetComponent<Renderer>().enabled = true;
     }

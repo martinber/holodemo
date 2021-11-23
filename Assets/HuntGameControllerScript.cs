@@ -16,13 +16,11 @@ public class HuntGameControllerScript : MonoBehaviour
     {
         clue.SetActive(true);
         prize.SetActive(true);
-        //prizeCylinder = prize.transform.Find("Cylinder").gameObject;
 
         InteractionManager.InteractionSourceUpdatedLegacy += HandUpdated;
         clue.transform.position = new Vector3(0, 0, 0);
         prizeScript = prize.GetComponent<PrizeScript>();
         //prizeScript.ActAsFound();
-        //prizeCylinder.GetComponent<Renderer>().enabled = false;
     }
 
     private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
