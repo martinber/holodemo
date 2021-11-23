@@ -38,7 +38,10 @@ public class UserLineScript : MonoBehaviour
                 {
                     Line.SetPosition(Line.positionCount - 1, pos);
                     float distance = Vector3.Distance(pos, Line.GetPosition(Line.positionCount - 2));
-                    
+
+                    Debug.Log(Line.positionCount);
+                    Debug.Log(distance);
+
                     if (distance > minimumDistance)
                     {
                         Line.positionCount++;

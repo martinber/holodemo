@@ -14,6 +14,11 @@ public class EvalGameControllerScript : MonoBehaviour
         userLine.SetActive(true);
     }
 
+    void LineCompare()
+    {
+        Vector3[] line_a;
+    }
+
     // Update is called once per frame
     void Update()
     {
