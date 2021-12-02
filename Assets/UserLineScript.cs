@@ -36,16 +36,12 @@ public class UserLineScript : MonoBehaviour
                     }
                     else
                     {
-                        Line.SetPosition(Line.positionCount - 1, pos);
                         float distance = Vector3.Distance(pos, Line.GetPosition(Line.positionCount - 2));
-
-                        Debug.Log(Line.positionCount);
-                        Debug.Log(distance);
-
                         if (distance > minimumDistance)
                         {
                             Line.positionCount++;
                         }
+                        Line.SetPosition(Line.positionCount - 1, pos);
                     }
                 }
             }
@@ -54,6 +50,7 @@ public class UserLineScript : MonoBehaviour
 
     public void StartDrawing()
     {
+        Line.positionCount = 0;
         drawing = true;
     }
 
@@ -67,11 +64,5 @@ public class UserLineScript : MonoBehaviour
         Vector3[] vertices = new Vector3[Line.positionCount];
         Line.GetPositions(vertices);
         return vertices;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
