@@ -23,6 +23,8 @@ public class ClueScript : MonoBehaviour
 
         continuousParticleSystemMain.startColor = normalColor;
         burstParticleSystemMain.startColor = powerColor;
+
+        CooldownStart();
     }
 
     // Update is called once per frame

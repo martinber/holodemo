@@ -12,6 +12,7 @@ public class HuntGameControllerScript : MonoBehaviour
     public Color farClueColor = new Color(1f, 1f, 1f, 0.4f); // Transparent White
     public Color closeClueColor = new Color(1f, 0f, 0f, 0.4f); // Transparent Red
     public float maxClueDist = 6; // 6 meters, the distance where the clue will be of color farClueColor
+    public GameObject infoText;
 
     private List<GameObject> prizes;
     private GameObject prize = null;
@@ -36,6 +37,8 @@ public class HuntGameControllerScript : MonoBehaviour
         keywordRecognizer = new KeywordRecognizer(keywords);
         keywordRecognizer.OnPhraseRecognized += OnPhraseRecognized;
         keywordRecognizer.Start();
+
+        ShowInfo("Game ready", "");
     }
 
     /// <summary>
@@ -85,5 +88,10 @@ public class HuntGameControllerScript : MonoBehaviour
         {
             clue.transform.LookAt(prize.transform.position);
         }
+    }
+
+    private void ShowInfo(string line1, string line2)
+    {
+        infoText.GetComponent<TextMesh>().text = $"{line1}\n{line2}.";
     }
 }
