@@ -1,24 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows.Speech;
 
 public class ClueScript : MonoBehaviour
 {
     public ParticleSystem continuousParticleSystem;
+    private ParticleSystem.MainModule continuousParticleSystemMain;
     public ParticleSystem burstParticleSystem;
+    private ParticleSystem.MainModule burstParticleSystemMain;
 
-    private KeywordRecognizer keywordRecognizer;
-    private string[] keywords = { "play video" };
+    bool powerReady = false;
+    public float powerCooldown;
+
+    public Color normalColor;
+    public Color powerColor;
 
     // Start is called before the first frame update
     void Start()
     {
-        burstParticleSystem.Stop();
+        continuousParticleSystemMain = continuousParticleSystem.main;
+        burstParticleSystemMain = burstParticleSystem.main;
 
-        keywordRecognizer = new KeywordRecognizer(keywords);
-        keywordRecognizer.OnPhraseRecognized += OnPhraseRecognized;
-        keywordRecognizer.Start();
+        continuousParticleSystemMain.startColor = normalColor;
+        burstParticleSystemMain.startColor = powerColor;
     }
 
     // Update is called once per frame
@@ -27,8 +31,29 @@ public class ClueScript : MonoBehaviour
         
     }
 
-    private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
+    public void EnablePower()
     {
-        burstParticleSystem.Play();
+        if (powerReady)
+        {
+            burstParticleSystem.Play();
+            CooldownStart();
+        }
+    }
+
+    public void CooldownStart()
+    {
+        StartCoroutine(CooldownCoroutine());
+    }
+
+    IEnumerator CooldownCoroutine()
+    {
+        powerReady = false;
+        continuousParticleSystemMain.startColor = normalColor;
+
+        yield return new WaitForSeconds(powerCooldown);
+
+        powerReady = true;
+        burstParticleSystemMain.startColor = powerColor;
     }
 }
+    
