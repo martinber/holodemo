@@ -564,7 +564,9 @@ MonoBehaviour:
   farClueColor: {r: 1, g: 1, b: 1, a: 0.4}
   closeClueColor: {r: 1, g: 0, b: 0, a: 0.4}
   maxClueDist: 6
-  infoText: {fileID: 0}
+  infoText: {fileID: 466972851}
+  numOfPrizes: 5
+  scanTime: 10
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,6 +796,16 @@ PrefabInstance:
     - target: {fileID: 4000013298573622, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011154029958, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 3}
+      propertyPath: drawVisualMeshes
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000012698980792, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
+        type: 3}
+      propertyPath: TrianglesPerCubicMeter
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ed75ffdf9031c94e8bce4b3d17b9928, type: 3}

@@ -10,6 +10,8 @@ public class PrizeScript : MonoBehaviour
     
     void Start()
     {
+        // TODO: Remove
+        cylinder.GetComponent<Renderer>().enabled = true;
     }
 
     public void ActAsFound()

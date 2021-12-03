@@ -69,9 +69,9 @@ public class EvalGameControllerScript : MonoBehaviour
             ShowInfo("Stopped drawing", $"Distance: {distance}");
 
             Debug.Log("Line = " + String.Join("\n",
-            new List<Vector3>(userVertices)
-            .ConvertAll(i => i.ToString("F4"))
-            .ToArray()));
+                new List<Vector3>(userVertices)
+                .ConvertAll(i => i.ToString("F4"))
+                .ToArray()));
         }
     }
 
