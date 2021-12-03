@@ -29,4 +29,11 @@ public class TargetLineScript : MonoBehaviour
             Line.SetPosition(index, new Vector3(x, y, z));
         }
     }
+
+    public Vector3[] GetVertices()
+    {
+        Vector3[] vertices = new Vector3[Line.positionCount];
+        Line.GetPositions(vertices);
+        return vertices;
+    }
 }

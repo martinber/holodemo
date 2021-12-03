@@ -10,8 +10,8 @@ public class ControllerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        huntGameController.SetActive(true);
-        // evalGameController.SetActive(true);
+        //huntGameController.SetActive(true);
+        evalGameController.SetActive(true);
     }
 
     // Update is called once per frame

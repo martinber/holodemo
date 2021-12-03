@@ -26,30 +26,47 @@ public class UserLineScript : MonoBehaviour
         {
             if (state.sourcePose.TryGetPosition(out pos))
             {
-                if (!drawing)
-                {
-                    Line.positionCount = 2;
-                    Line.SetPosition(0, pos);
-                    Line.SetPosition(1, pos);
-                    drawing = true;
-                }
-
                 if (drawing)
                 {
-                    Line.SetPosition(Line.positionCount - 1, pos);
-                    float distance = Vector3.Distance(pos, Line.GetPosition(Line.positionCount - 2));
-
-                    Debug.Log(Line.positionCount);
-                    Debug.Log(distance);
-
-                    if (distance > minimumDistance)
+                    if (Line.positionCount == 0)
                     {
-                        Line.positionCount++;
+                        Line.positionCount = 2;
+                        Line.SetPosition(0, pos);
+                        Line.SetPosition(1, pos);
+                    }
+                    else
+                    {
+                        Line.SetPosition(Line.positionCount - 1, pos);
+                        float distance = Vector3.Distance(pos, Line.GetPosition(Line.positionCount - 2));
+
+                        Debug.Log(Line.positionCount);
+                        Debug.Log(distance);
+
+                        if (distance > minimumDistance)
+                        {
+                            Line.positionCount++;
+                        }
                     }
                 }
-
             }
         }
+    }
+
+    public void StartDrawing()
+    {
+        drawing = true;
+    }
+
+    public void StopDrawing()
+    {
+        drawing = false;
+    }
+
+    public Vector3[] GetVertices()
+    {
+        Vector3[] vertices = new Vector3[Line.positionCount];
+        Line.GetPositions(vertices);
+        return vertices;
     }
 
     // Update is called once per frame
