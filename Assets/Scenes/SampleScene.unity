@@ -279,6 +279,7 @@ MonoBehaviour:
   continuousParticleSystem: {fileID: 1138865005}
   burstParticleSystem: {fileID: 1500857671}
   powerCooldown: 15
+  trackingWaitTime: 1
   normalColor: {r: 1, g: 0, b: 0, a: 1}
   powerColor: {r: 1, g: 0, b: 1, a: 1}
 --- !u!1 &363155889
@@ -341,7 +342,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.01
+    widthMultiplier: 0.005
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -564,8 +565,8 @@ MonoBehaviour:
   farClueColor: {r: 1, g: 1, b: 1, a: 0.4}
   closeClueColor: {r: 1, g: 0, b: 0, a: 0.4}
   maxClueDist: 6
+  findDist: 0.3
   infoText: {fileID: 466972851}
-  numOfPrizes: 50
   scanTime: 10
 --- !u!1 &705507993
 GameObject:
@@ -882,7 +883,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.01
+    widthMultiplier: 0.005
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -983,7 +984,7 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -3229,7 +3230,7 @@ ParticleSystem:
     multiplierCurve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.005
+      scalar: 0.002
       minScalar: 1
       maxCurve:
         serializedVersion: 2

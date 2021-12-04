@@ -11,6 +11,8 @@ public class ClueScript : MonoBehaviour
 
     bool powerReady = false;
     public float powerCooldown;
+    public float trackingWaitTime;
+    private float lastUpdateTime;
 
     public Color normalColor;
     public Color powerColor;
@@ -24,13 +26,41 @@ public class ClueScript : MonoBehaviour
         continuousParticleSystemMain.startColor = normalColor;
         burstParticleSystemMain.startColor = powerColor;
 
+        lastUpdateTime = Time.time;
+
         CooldownStart();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log($"Time: {Time.time}, {lastUpdateTime}, {lastUpdateTime + trackingWaitTime}");
+        if (Time.time > lastUpdateTime + trackingWaitTime)
+        {
+            TrackingLost();
+        }
+    }
+
+    public void UpdatePosition(Vector3 pos)
+    {
+        transform.position = pos;
+
+        if (Time.time > lastUpdateTime + trackingWaitTime)
+        {
+            TrackingRecovered();
+        }
+        lastUpdateTime = Time.time;
+    }
+
+    public void TrackingLost()
+    {
+        continuousParticleSystem.Stop();
+        burstParticleSystem.Stop();
+    }
+
+    public void TrackingRecovered()
+    {
+        continuousParticleSystem.Play();
     }
 
     public void EnablePower()
@@ -55,7 +85,7 @@ public class ClueScript : MonoBehaviour
         yield return new WaitForSeconds(powerCooldown);
 
         powerReady = true;
-        burstParticleSystemMain.startColor = powerColor;
+        continuousParticleSystemMain.startColor = powerColor;
     }
 }
     

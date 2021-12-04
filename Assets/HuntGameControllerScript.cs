@@ -15,16 +15,15 @@ namespace Academy.HoloToolkit.Unity
         public Color farClueColor = new Color(1f, 1f, 1f, 0.4f); // Transparent White
         public Color closeClueColor = new Color(1f, 0f, 0f, 0.4f); // Transparent Red
         public float maxClueDist = 6; // 6 meters, the distance where the clue will be of color farClueColor
+        public float findDist;
         public GameObject infoText;
 
-        private List<GameObject> prizes;
         private GameObject prize = null;
         private PrizeScript prizeScript;
 
         private KeywordRecognizer keywordRecognizer;
         private string[] keywords = { "start line", "abracadabra" };
 
-        public uint numOfPrizes;
         private bool creatingPrizes = false;
         public float scanTime = 10.0f;
         private System.Random rnd;
@@ -33,10 +32,6 @@ namespace Academy.HoloToolkit.Unity
 
         void Start()
         {
-            prizes = new List<GameObject>();
-            // TODO: Remove
-            prizes.Add((GameObject)Instantiate(prizePrefab, new Vector3(0, 0, 0), Quaternion.identity));
-
             clue.SetActive(true);
             clueScript = clue.GetComponent<ClueScript>();
 
@@ -50,38 +45,14 @@ namespace Academy.HoloToolkit.Unity
             rnd = new System.Random();
             SpatialMappingManager.Instance.StartObserver();
             StartCoroutine(WaitScanTime());
-
-            ShowInfo("Game ready", "");
-        }
-
-        /// <summary>
-        /// Start tracking a random prize
-        /// </summary>
-        private void SelectPrize()
-        {
-            int i = Random.Range(0, prizes.Count);
-            prize = prizes[i];
-            prizeScript = prize.GetComponent<PrizeScript>();
         }
 
         private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
         {
-
-            if (prize != null)
+            Vector3 handPos;
+            if (state.sourcePose.TryGetPosition(out handPos))
             {
-                Vector3 pos;
-                if (state.sourcePose.TryGetPosition(out pos))
-                {
-                    clue.transform.position = pos;
-
-                    float dist = Vector3.Distance(pos, prize.transform.position);
-                    clue.GetComponent<Renderer>().material.color = Color.Lerp(closeClueColor, farClueColor, dist / maxClueDist);
-
-                    if (dist < 0.3)
-                    {
-                        prizeScript.ActAsFound();
-                    }
-                }
+                clueScript.UpdatePosition(handPos);
             }
         }
 
@@ -93,27 +64,29 @@ namespace Academy.HoloToolkit.Unity
         IEnumerator WaitScanTime()
         {
             creatingPrizes = false;
-            ShowInfo("Waiting scanning time", "");
 
             yield return new WaitForSeconds(scanTime);
 
             creatingPrizes = true;
-            ShowInfo("Finished waiting scanning time", "");
         }
 
         void Update()
         {
-            if (prize == null)
-            {
-                SelectPrize();
-                //prizeScript.ActAsFound();
-            }
-            else
+            ShowInfo($"creatingPrizes: {creatingPrizes}", $"prize: {prize != null}");
+            if (prize != null)
             {
                 clue.transform.LookAt(prize.transform.position);
+
+                float dist = Vector3.Distance(clue.transform.position, prize.transform.position);
+                //clue.GetComponent<Renderer>().material.color = Color.Lerp(closeClueColor, farClueColor, dist / maxClueDist);
+
+                if (dist < findDist)
+                {
+                    prizeScript.ActAsFound();
+                }
             }
        
-            if (creatingPrizes && prizes.Count < numOfPrizes)
+            if (creatingPrizes && prize == null)
             {
                 List<MeshFilter> meshFilterList = SpatialMappingManager.Instance.GetMeshFilters();
                 
@@ -144,9 +117,9 @@ namespace Academy.HoloToolkit.Unity
 
                 int prizePosIdx = rnd.Next(0, mesh.vertices.Length);
                 Vector3 prizePosition = transform.TransformPoint(mesh.vertices[prizePosIdx]);
-                prizes.Add((GameObject)Instantiate(prizePrefab, prizePosition, Quaternion.identity));
-                Debug.Log($"Created prize {prizes.Count} in: {prizePosition}");
-                Debug.Log($"{creatingPrizes} numofPrizes: {numOfPrizes}");
+
+                prize = (GameObject)Instantiate(prizePrefab, prizePosition, Quaternion.identity);
+                prizeScript = prize.GetComponent<PrizeScript>();
             }
             //SpatialMappingManager.Instance.StopObserver();
         }
