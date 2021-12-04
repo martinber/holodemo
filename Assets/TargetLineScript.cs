@@ -34,6 +34,10 @@ public class TargetLineScript : MonoBehaviour
     {
         Vector3[] vertices = new Vector3[Line.positionCount];
         Line.GetPositions(vertices);
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vertices[i] = transform.TransformPoint(vertices[i]);
+        }
         return vertices;
     }
 }
