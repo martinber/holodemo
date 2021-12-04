@@ -24,7 +24,7 @@ namespace Academy.HoloToolkit.Unity
         private KeywordRecognizer keywordRecognizer;
         private string[] keywords = { "start line", "abracadabra" };
 
-        public uint numOfPrizes = 50;
+        public uint numOfPrizes;
         private bool creatingPrizes = false;
         public float scanTime = 10.0f;
         private System.Random rnd;
@@ -115,29 +115,40 @@ namespace Academy.HoloToolkit.Unity
        
             if (creatingPrizes && prizes.Count < numOfPrizes)
             {
-                List<Mesh> meshList = SpatialMappingManager.Instance.GetMeshes();
+                List<MeshFilter> meshFilterList = SpatialMappingManager.Instance.GetMeshFilters();
+                
+                /*
+                foreach (MeshFilter mf in meshFilterList)
+                {
+                    
+                    Mesh m = mf.sharedMesh;
+                    Transform t = mf.transform;
+                    Debug.Log("Mesh = " + string.Join("\n",
+                        new List<Vector3>(m.vertices)
+                        .ConvertAll(i => t.TransformPoint(i).ToString("F4"))
+                        .ToArray()));
+                }
+                */
 
                 Mesh mesh;
+                Transform transform;
                 do
                 {
-                    int meshIdx = rnd.Next(0, meshList.Count);
-                    mesh = meshList[meshIdx];
-                    mesh.RecalculateNormals();
+                    int meshFilterIdx = rnd.Next(0, meshFilterList.Count);
+
+                    mesh = meshFilterList[meshFilterIdx].sharedMesh;
+                    transform = meshFilterList[meshFilterIdx].transform;
+
+                    //mesh.RecalculateNormals();
                 } while (mesh == null); // To guarantee that the mesh is loaded is not empty
 
-                Debug.Log($"Number of meshes: {meshList.Count}");
-                Debug.Log($"Number of vertices: {mesh.vertices.Length}");
-                //Debug.Log("Mesh = " + String.Join("\n",
-                //    new List<Vector3>(mesh.vertices)
-                //    .ConvertAll(i => i.ToString("F4"))
-                //    .ToArray()));
-
                 int prizePosIdx = rnd.Next(0, mesh.vertices.Length);
-                Vector3 prizePosition = mesh.vertices[prizePosIdx];
+                Vector3 prizePosition = transform.TransformPoint(mesh.vertices[prizePosIdx]);
                 prizes.Add((GameObject)Instantiate(prizePrefab, prizePosition, Quaternion.identity));
-                Debug.Log($"Created prize in: {prizePosition}");
+                Debug.Log($"Created prize {prizes.Count} in: {prizePosition}");
+                Debug.Log($"{creatingPrizes} numofPrizes: {numOfPrizes}");
             }
-            SpatialMappingManager.Instance.StopObserver();
+            //SpatialMappingManager.Instance.StopObserver();
         }
 
         private void ShowInfo(string line1, string line2)

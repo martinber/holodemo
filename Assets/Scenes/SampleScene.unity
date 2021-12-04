@@ -565,7 +565,7 @@ MonoBehaviour:
   closeClueColor: {r: 1, g: 0, b: 0, a: 0.4}
   maxClueDist: 6
   infoText: {fileID: 466972851}
-  numOfPrizes: 5
+  numOfPrizes: 50
   scanTime: 10
 --- !u!1 &705507993
 GameObject:
@@ -800,7 +800,7 @@ PrefabInstance:
     - target: {fileID: 114000011154029958, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
         type: 3}
       propertyPath: drawVisualMeshes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114000012698980792, guid: 2ed75ffdf9031c94e8bce4b3d17b9928,
         type: 3}
