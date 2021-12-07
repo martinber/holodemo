@@ -12,17 +12,16 @@ namespace Academy.HoloToolkit.Unity
         public GameObject clue;
         private ClueScript clueScript;
         public GameObject prizePrefab;
-        public Color farClueColor = new Color(1f, 1f, 1f, 0.4f); // Transparent White
-        public Color closeClueColor = new Color(1f, 0f, 0f, 0.4f); // Transparent Red
-        public float maxClueDist = 6; // 6 meters, the distance where the clue will be of color farClueColor
         public float findDist;
         public GameObject infoText;
+
+        private int score = 0;
 
         private GameObject prize = null;
         private PrizeScript prizeScript;
 
         private KeywordRecognizer keywordRecognizer;
-        private string[] keywords = { "start line", "abracadabra" };
+        private string[] keywords = { "super power", "start line", "abracadabra", "help me", "show prize", "show mesh", "hide mesh", "new prize" };
 
         private bool creatingPrizes = false;
         public float scanTime = 10.0f;
@@ -45,6 +44,14 @@ namespace Academy.HoloToolkit.Unity
             rnd = new System.Random();
             SpatialMappingManager.Instance.StartObserver();
             StartCoroutine(WaitScanTime());
+
+            ShowInfo("Game starting", "");
+        }
+
+        private void AddScore()
+        {
+            score++;
+            ShowInfo($"Score: {score}", "");
         }
 
         private void HandUpdated(UnityEngine.XR.WSA.Input.InteractionSourceState state)
@@ -58,7 +65,33 @@ namespace Academy.HoloToolkit.Unity
 
         private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
         {
-            clueScript.EnablePower();
+            if (args.text == "show prize")
+            {
+                if (prize != null)
+                {
+                    prizeScript.MakeVisible();
+                }
+            }
+            else if (args.text == "new prize")
+            {
+                if (prize != null)
+                {
+                    prizeScript.ActAsFound();
+                    AddScore();
+                }
+            }
+            else if (args.text == "show mesh")
+            {
+                SpatialMappingManager.Instance.drawVisualMeshes = true;
+            }
+            else if (args.text == "hide mesh")
+            {
+                SpatialMappingManager.Instance.drawVisualMeshes = false;
+            }
+            else
+            {
+                clueScript.EnablePower();
+            }
         }
 
         IEnumerator WaitScanTime()
@@ -68,11 +101,11 @@ namespace Academy.HoloToolkit.Unity
             yield return new WaitForSeconds(scanTime);
 
             creatingPrizes = true;
+            ShowInfo("Game started", "");
         }
 
         void Update()
         {
-            ShowInfo($"creatingPrizes: {creatingPrizes}", $"prize: {prize != null}");
             if (prize != null)
             {
                 clue.transform.LookAt(prize.transform.position);
@@ -83,25 +116,55 @@ namespace Academy.HoloToolkit.Unity
                 if (dist < findDist)
                 {
                     prizeScript.ActAsFound();
+                    AddScore();
                 }
             }
-       
+
             if (creatingPrizes && prize == null)
             {
-                List<MeshFilter> meshFilterList = SpatialMappingManager.Instance.GetMeshFilters();
+                Vector3? prizePosition = SelectPrizePosition();
                 
-                /*
-                foreach (MeshFilter mf in meshFilterList)
+                // Check if returned a value
+                if (prizePosition is Vector3 pos)
                 {
-                    
-                    Mesh m = mf.sharedMesh;
-                    Transform t = mf.transform;
-                    Debug.Log("Mesh = " + string.Join("\n",
-                        new List<Vector3>(m.vertices)
-                        .ConvertAll(i => t.TransformPoint(i).ToString("F4"))
-                        .ToArray()));
+                    prize = (GameObject)Instantiate(prizePrefab, pos, Quaternion.identity);
+                    prizeScript = prize.GetComponent<PrizeScript>();
+
+                    //SpatialMappingManager.Instance.StopObserver();
                 }
-                */
+            }
+        }
+
+        private void ShowInfo(string line1, string line2)
+        {
+            infoText.GetComponent<TextMesh>().text = $"{line1}\n{line2}.";
+        }
+
+        /**
+         * Returns Vector3 position for a prize, selected from a random vertex of the world
+         * taking into account that the vertex is not too high or low
+         * 
+         * Can return null if couldnt find a vertex, in that case just try again next frame.
+         */
+        private Vector3? SelectPrizePosition()
+        {
+            int maxTries = 10;
+            for (int i = 0; i < maxTries; i++)
+            {
+                List<MeshFilter> meshFilterList = SpatialMappingManager.Instance.GetMeshFilters();
+
+               /*
+               foreach (MeshFilter mf in meshFilterList)
+               {
+
+                   Mesh m = mf.sharedMesh;
+                   Transform t = mf.transform;
+                   Debug.Log("Mesh = " + string.Join("\n",
+                       new List<Vector3>(m.vertices)
+                       .ConvertAll(i => t.TransformPoint(i).ToString("F4"))
+                       .ToArray()));
+               }
+               */
 
                 Mesh mesh;
                 Transform transform;
@@ -116,17 +179,15 @@ namespace Academy.HoloToolkit.Unity
                 } while (mesh == null); // To guarantee that the mesh is loaded is not empty
 
                 int prizePosIdx = rnd.Next(0, mesh.vertices.Length);
-                Vector3 prizePosition = transform.TransformPoint(mesh.vertices[prizePosIdx]);
 
-                prize = (GameObject)Instantiate(prizePrefab, prizePosition, Quaternion.identity);
-                prizeScript = prize.GetComponent<PrizeScript>();
+                Vector3 candidatePosition = transform.TransformPoint(mesh.vertices[prizePosIdx]);
+
+                if (-0.5f < candidatePosition.y && candidatePosition.y < 0.5f)
+                {
+                    return candidatePosition;
+                }
             }
-            //SpatialMappingManager.Instance.StopObserver();
-        }
-
-        private void ShowInfo(string line1, string line2)
-        {
-            infoText.GetComponent<TextMesh>().text = $"{line1}\n{line2}.";
+            return null;
         }
     }
 }

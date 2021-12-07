@@ -10,7 +10,11 @@ public class PrizeScript : MonoBehaviour
     
     void Start()
     {
-        // TODO: Remove
+
+    }
+
+    public void MakeVisible()
+    {
         cylinder.GetComponent<Renderer>().enabled = true;
     }
 
