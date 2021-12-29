@@ -7,6 +7,7 @@ public class UserLineScript : MonoBehaviour
 {
     public LineRenderer Line;
     public float minimumDistance;
+    public Vector3 lastHandPos;
 
     private bool drawing;
 
@@ -26,6 +27,7 @@ public class UserLineScript : MonoBehaviour
         {
             if (state.sourcePose.TryGetPosition(out pos))
             {
+                lastHandPos = pos;
                 if (drawing)
                 {
                     if (Line.positionCount == 0)

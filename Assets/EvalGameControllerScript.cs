@@ -15,7 +15,10 @@ public class EvalGameControllerScript : MonoBehaviour
     public GameObject infoText;
 
     private KeywordRecognizer keywordRecognizer;
-    private string[] keywords = { "start line", "stop line" };
+    private string[] keywords = { "start line", "stop line", "move target", "next target" };
+
+    private string infoLine1 = "";
+    private string infoLine2 = "";
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +32,8 @@ public class EvalGameControllerScript : MonoBehaviour
         keywordRecognizer = new KeywordRecognizer(keywords);
         keywordRecognizer.OnPhraseRecognized += OnPhraseRecognized;
         keywordRecognizer.Start();
+
+        ShowInfo("Recording drawing", "Say \"start line\", \"stop line\", \"move target\",\"next target\"");
     }
 
     // Calculates distance between two lines
@@ -54,10 +59,11 @@ public class EvalGameControllerScript : MonoBehaviour
 
     private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
+        ShowInfo(args.text, null);
         if (args.text == "start line")
         {
             userLineScript.StartDrawing();
-            ShowInfo("Recording drawing", $"");
+            ShowInfo("Recording drawing", null);
         }
         if (args.text == "stop line")
         {
@@ -66,17 +72,32 @@ public class EvalGameControllerScript : MonoBehaviour
             Vector3[] userVertices = userLineScript.GetVertices();
             Vector3[] targetVertices = targetLineScript.GetVertices();
             float distance = LineCompare(userVertices, targetVertices);
-            ShowInfo("Stopped drawing", $"Distance: {distance}");
+            ShowInfo($"Stopped drawing. Distance: {distance}", null);
 
             Debug.Log("Line = " + String.Join("\n",
                 new List<Vector3>(userVertices)
                 .ConvertAll(i => i.ToString("F4"))
                 .ToArray()));
         }
+        if (args.text == "move target")
+        {
+            targetLine.transform.position = userLineScript.lastHandPos;
+        }
+        if (args.text == "next target")
+        {
+            targetLineScript.NextTarget();
+        }
     }
 
+    // Update text, the second line is not modified if null
     private void ShowInfo(string line1, string line2)
     {
-        infoText.GetComponent<TextMesh>().text = $"{line1}\n{line2}.";
+        infoLine1 = line1;
+        if (line2 != null)
+        {
+            infoLine2 = line2;
+        }
+
+        infoText.GetComponent<TextMesh>().text = $"{infoLine1}\n{infoLine2}.";
     }
 }
