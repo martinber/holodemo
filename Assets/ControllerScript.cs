@@ -28,6 +28,16 @@ public class ControllerScript : MonoBehaviour
         
     }
 
+    public void TargetFound()
+    {
+        ShowInfo("Target found", "");
+    }
+
+    public void TargetLost()
+    {
+        ShowInfo("Target lost", "");
+    }
+
     private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
         if (args.text == "play game")
