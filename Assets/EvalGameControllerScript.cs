@@ -81,7 +81,7 @@ public class EvalGameControllerScript : MonoBehaviour
         }
         if (args.text == "move target")
         {
-            targetLine.transform.position = userLineScript.lastHandPos;
+            targetLine.transform.position = userLineScript.lastPos;
         }
         if (args.text == "next target")
         {

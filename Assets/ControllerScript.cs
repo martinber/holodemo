@@ -8,9 +8,14 @@ public class ControllerScript : MonoBehaviour
     public GameObject huntGameController;
     public GameObject evalGameController;
     public GameObject infoText;
+    public GameObject imageTarget;
+    public GameObject wandBall;
 
     private KeywordRecognizer keywordRecognizer;
     private string[] keywords = { "play game", "draw lines" };
+
+    public bool wandAvailable = false; // Becomes true while the wand is visible
+    private Transform wandTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -22,20 +27,29 @@ public class ControllerScript : MonoBehaviour
         ShowInfo("Say \"Play Game\"", "or \"Draw Lines\"");
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector3? GetWandPosition()
     {
-        
+        if (wandAvailable)
+        {
+            ShowInfo($"working {wandAvailable}, {wandBall == null}", "");
+            return wandBall.transform.position;
+        }
+        else
+        {
+            ShowInfo($"{wandAvailable}, {wandBall == null}", "");
+            return null;
+        }
     }
 
     public void TargetFound()
     {
-        ShowInfo("Target found", "");
+        wandAvailable = true;
+        wandTransform = imageTarget.transform.Find("Wand");
     }
 
     public void TargetLost()
     {
-        ShowInfo("Target lost", "");
+        wandAvailable = false;
     }
 
     private void OnPhraseRecognized(PhraseRecognizedEventArgs args)

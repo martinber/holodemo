@@ -9,6 +9,8 @@ namespace Academy.HoloToolkit.Unity
 {
     public class HuntGameControllerScript : MonoBehaviour
     {
+        public GameObject controller;
+        private ControllerScript controllerScript;
         public GameObject clue;
         private ClueScript clueScript;
         public GameObject prizePrefab;
@@ -31,6 +33,8 @@ namespace Academy.HoloToolkit.Unity
 
         void Start()
         {
+            controllerScript = controller.GetComponent<ControllerScript>();
+
             clue.SetActive(true);
             clueScript = clue.GetComponent<ClueScript>();
 
@@ -106,6 +110,13 @@ namespace Academy.HoloToolkit.Unity
 
         void Update()
         {
+            Vector3? wandPos = controllerScript.GetWandPosition();
+            if (wandPos is Vector3 p)
+            {
+                clueScript.UpdatePosition(p);
+            }
+
+
             if (prize != null)
             {
                 clue.transform.LookAt(prize.transform.position);
