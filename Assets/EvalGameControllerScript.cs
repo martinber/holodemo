@@ -13,9 +13,10 @@ public class EvalGameControllerScript : MonoBehaviour
     public GameObject userLine;
     private UserLineScript userLineScript;
     public GameObject infoText;
+    public GameObject sphere;
 
     private KeywordRecognizer keywordRecognizer;
-    private string[] keywords = { "start line", "stop line", "move target", "next target" };
+    private string[] keywords = { "start line", "stop line", "move target", "next target", "hide sphere", "show sphere" };
 
     private string infoLine1 = "";
     private string infoLine2 = "";
@@ -33,7 +34,7 @@ public class EvalGameControllerScript : MonoBehaviour
         keywordRecognizer.OnPhraseRecognized += OnPhraseRecognized;
         keywordRecognizer.Start();
 
-        ShowInfo("Recording drawing", "Say \"start line\", \"stop line\", \"move target\",\"next target\"");
+        ShowInfo("Recording drawing", "Say \"start line\", \"stop line\", \"move target\",\"next target\", \"hide sphere\", \"show sphere\"");
     }
 
     // Calculates distance between two lines
@@ -86,6 +87,14 @@ public class EvalGameControllerScript : MonoBehaviour
         if (args.text == "next target")
         {
             targetLineScript.NextTarget();
+        }
+        if (args.text == "hide sphere")
+        {
+            sphere.GetComponent<Renderer>().enabled = false;
+        }
+        if (args.text == "show sphere")
+        {
+            sphere.GetComponent<Renderer>().enabled = true;
         }
     }
 
