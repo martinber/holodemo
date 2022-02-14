@@ -49,10 +49,10 @@ Screenshots of EvalGame:
 
 ![EvalGame screenshot](./docs/EvalGame_2.jpg)
 
-![EvalGame screenshot](./docs/EvalGame_2.jpg)
-
 Screenshots of HuntGame:
 
 ![HuntGame screenshot](./docs/HuntGame_1.jpg)
 
 ![HuntGame screenshot](./docs/HuntGame_2.jpg)
+
+![HuntGame screenshot](./docs/HuntGame_3.jpg)
